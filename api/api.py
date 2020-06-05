@@ -32,9 +32,9 @@ def spotihue_connect():
     if request.method == "POST":
         try:
             SpotiHue().connect_hue_bridge_first_time()
-            return {"connection_status": "true"}
+            return {"connection": "successful"}
         except:
-            return {"connection_status": "false"}
+            return {"connection": "unsuccessful"}
 
 @app.route("/start", methods=["POST"])
 @cross_origin()
@@ -42,7 +42,7 @@ def spotihue_play():
     if request.method == "POST":
         task_id = run_spotihue.delay()
         session["task_id"] = str(task_id)
-        return {"control_status": "SpotiHue is playing"}
+        return {"control": "playing"}
 
 @app.route("/stop", methods=["POST"])
 @cross_origin()
@@ -50,7 +50,7 @@ def spotihue_stop():
     if request.method == "POST":
         SpotiHue().change_light_color_normal()
         celery.control.revoke(session["task_id"], terminate=True)
-        return {"control_status": "SpotiHue is stopped"}
+        return {"control": "stopped"}
 
 if __name__== "__main__":
     app.run()
