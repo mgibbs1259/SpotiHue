@@ -12,7 +12,7 @@ from phue import Bridge
 from spotipy import Spotify
 from sklearn.cluster import KMeans
 
-import credentials
+import api.credentials as credentials
 
 
 class SpotiHue(object):
@@ -57,7 +57,7 @@ class SpotiHue(object):
     def obtain_kmeans_clusters(self):
         """Returns the cluster centers obtained by fitting K-Means with 3 clusters."""
         album_artwork_array = self.convert_current_track_album_artwork_to_2D_array()
-        kmeans = KMeans(n_clusters=3, random_state=1259)
+        kmeans = KMeans(n_clusters=5)
         kmeans.fit(album_artwork_array)
         return kmeans.cluster_centers_
 
@@ -94,12 +94,13 @@ class SpotiHue(object):
 
     def convert_xyz_to_xy(self):
         """Returns xy values in the CIE 1931 colorspace after a XYZ to xy conversion has been applied."""
-        # Only using one cluster for now
-        cluster = self.check_black_clusters()[0]
-        X, Y, Z = self.convert_rgb_to_xyz(cluster)
-        x = round(X / (X + Y + Z), 4)
-        y = round(Y / (X + Y + Z), 4)
-        return x, y
+        xy_clusters = []
+        for cluster in self.check_black_clusters():
+            X, Y, Z = self.convert_rgb_to_xyz(cluster)
+            x = round(X / (X + Y + Z), 4)
+            y = round(Y / (X + Y + Z), 4)
+            xy_clusters.append((x, y))
+        return xy_clusters
 
     def connect_hue_bridge_first_time(self):
         """Connects to the Hue Bridge for the first time. Ensure Hue Bridge button is pressed."""
@@ -113,12 +114,13 @@ class SpotiHue(object):
             light.brightness = 127
 
     def change_light_color_album_artwork(self):
-        """Change all of the lights to one of the prominent colors in the current track's album artwork."""
+        """Change each light to one of the prominent colors in the current track's album artwork."""
         track, artist, album = self.retrieve_current_track_information()
         logging.info(f"Changing the color of the lights based on the current track: {track}, {artist}, {album}")
-        x, y = self.convert_xyz_to_xy()
-        for light in self.hue_bridge.lights:
-            light.xy = [x, y]
+        clusters = self.convert_xyz_to_xy()
+        lights = self.hue_bridge.lights
+        for i in range(len(lights)):
+            lights[i].xy = clusters[i]
 
     def change_light_color_normal(self):
         """Change all of the lights to normal."""

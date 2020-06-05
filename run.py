@@ -4,7 +4,7 @@
 import logging
 import argparse
 
-from spotihue import SpotiHue
+from api.spotihue import SpotiHue
 
 
 if __name__ == "__main__":
