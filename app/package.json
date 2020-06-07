@@ -1,0 +1,47 @@
+{
+  "name": "app",
+  "version": "0.1.0",
+  "private": true,
+  "dependencies": {
+    "-": "0.0.1",
+    "@testing-library/jest-dom": "^4.2.4",
+    "@testing-library/react": "^9.3.2",
+    "@testing-library/user-event": "^7.1.2",
+    "concurrently": "^5.2.0",
+    "react": "^16.13.1",
+    "react-dom": "^16.13.1",
+    "react-router": "^5.2.0",
+    "react-router-dom": "^5.2.0",
+    "react-scripts": "3.4.1",
+    "save-dev": "0.0.1-security"
+  },
+  "scripts": {
+    "api-flask": "cd ../api && flask run",
+    "api-redis": "cd .. && redis-server",
+    "api-celery": "cd .. && celery -A api.api.celery worker -l info",
+    "app-react": "react-scripts start",
+    "start": "npm run api-redis & npm run api-celery & npm run api-flask & npm run app-react",
+    "build": "react-scripts build",
+    "test": "react-scripts test",
+    "eject": "react-scripts eject"
+  },
+  "eslintConfig": {
+    "extends": "react-app"
+  },
+  "browserslist": {
+    "production": [
+      ">0.2%",
+      "not dead",
+      "not op_mini all"
+    ],
+    "development": [
+      "last 1 chrome version",
+      "last 1 firefox version",
+      "last 1 safari version"
+    ]
+  },
+  "proxy": "http://localhost:5000",
+  "devDependencies": {
+    "npm-run-all": "^4.1.5"
+  }
+}

@@ -129,3 +129,5 @@ dmypy.json
 .pyre/
 
 pyvenv.cfg
+.cache-mgibbs1259
+album_artwork.jpg

@@ -6,6 +6,8 @@ chardet
 click
 credentials
 Flask
+Flask-Cors
+future
 idna
 importlib-metadata
 itsdangerous
@@ -18,6 +20,7 @@ opencv-python
 phue
 python-dotenv
 pytz
+redis
 requests
 scikit-learn
 scipy
